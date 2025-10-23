@@ -1,0 +1,40 @@
+spring:
+  main:
+    web-application-type: reactive
+  cloud:
+    gateway:
+      routes:
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/users/**
+          filters:
+            - 'RewritePath=/users/(?<segment>.*), /\${segment}'
+        - id: movie-service
+          uri: lb://movie-service
+          predicates:
+            - Path=/movies/**
+          filters:
+            - 'RewritePath=/movies/(?<segment>.*), /\${segment}'
+        - id: show-service
+          uri: lb://show-service
+          predicates:
+            - Path=/shows/**
+          filters:
+            - 'RewritePath=/shows/(?<segment>.*), /\${segment}'
+        - id: ticket-service
+          uri: lb://ticket-service
+          predicates:
+            - Path=/tickets/**
+          filters:
+            - 'RewritePath=/tickets/(?<segment>.*), /\${segment}'
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus,gateway
+
+endpoint:
+  gateway:
+    enable: true
